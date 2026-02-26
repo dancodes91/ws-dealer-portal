@@ -1,0 +1,69 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --marine-primary: #374151;
+  --marine-secondary: #4b5563;
+  --marine-accent: #6b7280;
+  --marine-light: #f3f4f6;
+  --marine-dark: #111827;
+  --surface: #fafafa;
+  --surface-card: #ffffff;
+  --text-primary: #111827;
+  --text-secondary: #6b7280;
+  --border: #e5e7eb;
+
+  /* Sidebar */
+  --sidebar-width: 260px;
+  --sidebar-width-collapsed: 72px;
+  --sidebar-bg: #ffffff;
+  --sidebar-text: #111827;
+  --sidebar-text-muted: #6b7280;
+  --sidebar-hover-bg: #f3f4f6;
+  --sidebar-active-bg: #e5e7eb;
+  --sidebar-border: #e5e7eb;
+
+  /* Header */
+  --header-height: 56px;
+  --header-bg: #ffffff;
+  --header-border: #e5e7eb;
+  --header-text: #111827;
+}
+
+body {
+  color: var(--text-primary);
+  background: var(--surface);
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+.btn-primary {
+  @apply px-4 py-2 rounded-lg font-medium transition-colors;
+  background-color: var(--marine-primary);
+  color: #ffffff;
+}
+.btn-primary:hover {
+  background-color: var(--marine-secondary);
+}
+
+.btn-secondary {
+  @apply px-4 py-2 rounded-lg font-medium border transition-colors;
+  border-color: var(--marine-primary);
+  color: var(--marine-primary);
+}
+.btn-secondary:hover {
+  background-color: var(--marine-light);
+}
+
+.card {
+  background: var(--surface-card);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
