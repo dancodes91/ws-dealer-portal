@@ -1,7 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getLinks, getDealers, getFiles, generateLinks, type Dealer, type DownloadLinkItem, type PriceFileListItem } from "@/lib/api-client";
+import {
+  getLinks,
+  getDealers,
+  getFiles,
+  generateLinks,
+  type Dealer,
+  type DownloadLinkItem,
+  type PriceFileListItem,
+} from "@/lib/api-client";
 import { PageHeading } from "@/components/PageHeading";
 import { IconLink } from "@/components/icons";
 
@@ -59,6 +67,8 @@ export default function LinksPage() {
     }));
   }
 
+  const dealerById = new Map(dealers.map((d) => [d.id, d]));
+
   return (
     <div>
       <PageHeading icon={<IconLink />}>Download links</PageHeading>
@@ -114,7 +124,9 @@ export default function LinksPage() {
           <table className="w-full">
             <thead className="bg-[var(--marine-light)] border-b border-[var(--border)]">
               <tr>
-                <th className="text-left p-3 font-medium">Dealer ID</th>
+                <th className="text-left p-3 font-medium">Dealer</th>
+                <th className="text-left p-3 font-medium">Vendor</th>
+                <th className="text-left p-3 font-medium">File</th>
                 <th className="text-left p-3 font-medium">Expires</th>
                 <th className="text-left p-3 font-medium">Downloaded</th>
                 <th className="text-left p-3 font-medium">Link</th>
@@ -123,7 +135,23 @@ export default function LinksPage() {
             <tbody>
               {links.map((l) => (
                 <tr key={l.id} className="border-b border-[var(--border)] last:border-0">
-                  <td className="p-3">{l.dealer_id}</td>
+                  <td className="p-3">
+                    {(() => {
+                      const d = dealerById.get(l.dealer_id);
+                      return d ? `${d.name} (${d.customer_number})` : l.dealer_id;
+                    })()}
+                  </td>
+                  <td className="p-3">
+                    {l.vendor_name || l.vendor_code || "–"}
+                  </td>
+                  <td className="p-3 whitespace-nowrap">
+                    {l.filename || "MAST001.ZIP"}
+                    {l.version ? (
+                      <span className="text-[var(--text-secondary)] text-xs ml-1">
+                        ({l.version})
+                      </span>
+                    ) : null}
+                  </td>
                   <td className="p-3">{new Date(l.expires_at).toLocaleString()}</td>
                   <td className="p-3">{l.downloaded_at ? new Date(l.downloaded_at).toLocaleString() : "–"}</td>
                   <td className="p-3">

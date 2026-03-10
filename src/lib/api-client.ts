@@ -44,6 +44,11 @@ export interface DownloadLinkItem {
   created_at: string;
   downloaded_at: string | null;
   download_url: string;
+  // Optional context from backend to help identify shared files
+  filename?: string | null;
+  version?: string | null;
+  vendor_code?: string | null;
+  vendor_name?: string | null;
 }
 
 async function getStoredToken(): Promise<string | null> {
