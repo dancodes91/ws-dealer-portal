@@ -78,13 +78,14 @@ export default function DashboardLayout({
   const displayName = email || (userType === "admin" ? "Admin" : "Dealer");
 
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex" style={{ background: "var(--eco-bg)" }}>
       {/* Sidebar */}
       <aside
         className="fixed left-0 top-0 bottom-0 flex flex-col border-r border-[var(--sidebar-border)] transition-[width] duration-200 ease-in-out"
         style={{
           width: sidebarWidth,
           backgroundColor: "var(--sidebar-bg)",
+          backdropFilter: "blur(18px)",
         }}
       >
         <div
@@ -107,7 +108,7 @@ export default function DashboardLayout({
             <IconChevronSidebar collapsed={sidebarCollapsed} />
           </button>
         </div>
-        <nav className="flex-1 p-3 space-y-0.5 overflow-y-auto overflow-x-hidden">
+        <nav className="flex-1 p-3 space-y-1 overflow-y-auto overflow-x-hidden">
           {navLink("/dashboard", "Dashboard", pathname === "/dashboard", <IconDashboard />)}
           {isAdmin && (
             <>
@@ -161,7 +162,7 @@ export default function DashboardLayout({
         style={{ marginLeft: sidebarWidth }}
       >
         <header
-          className="flex-shrink-0 flex items-center justify-between px-6 border-b border-[var(--header-border)]"
+          className="flex-shrink-0 flex items-center justify-between px-6 border-b border-[var(--header-border)] shadow-sm"
           style={{
             height: "var(--header-height)",
             backgroundColor: "var(--header-bg)",
@@ -177,7 +178,7 @@ export default function DashboardLayout({
           >
             <IconMenu />
           </button>
-          <h1 className="text-lg font-semibold">
+          <h1 className="text-lg font-semibold text-[var(--eco-earth-green)]">
             {pathname === "/dashboard"
               ? "Dashboard"
               : pathname.startsWith("/dashboard/dealers")
@@ -194,7 +195,7 @@ export default function DashboardLayout({
           </h1>
         </header>
 
-        <main className="flex-1 overflow-auto p-6 bg-[var(--surface)]">
+        <main className="flex-1 overflow-auto p-6 bg-transparent">
           <div className="max-w-5xl mx-auto">{children}</div>
         </main>
       </div>

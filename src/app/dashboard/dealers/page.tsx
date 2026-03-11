@@ -136,7 +136,15 @@ export default function DealersPage() {
                   <td className="p-3">{d.name}</td>
                   <td className="p-3">{d.email}</td>
                   <td className="p-3">{d.customer_number}</td>
-                  <td className="p-3">{d.active ? "Active" : "Inactive"}</td>
+                  <td className="p-3">
+                    <span
+                      className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
+                        d.active ? "bg-green-50 text-green-700 border border-green-200" : "bg-yellow-50 text-yellow-800 border border-yellow-200"
+                      }`}
+                    >
+                      {d.active ? "Active" : "Pending / Inactive"}
+                    </span>
+                  </td>
                   <td className="p-3">
                     <button onClick={() => openEdit(d)} className="text-[var(--marine-secondary)] hover:underline mr-2">
                       Edit

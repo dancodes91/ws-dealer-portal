@@ -14,20 +14,34 @@
   --text-secondary: #6b7280;
   --border: #e5e7eb;
 
+  /* Eco-inspired palette */
+  --eco-forest-green: #4caf50;
+  --eco-sage-green: #66bb6a;
+  --eco-leaf-green: #8bc34a;
+  --eco-earth-green: #2e7d32;
+  --eco-zen-green: #81c784;
+  --eco-mindful-white: rgba(255, 255, 255, 0.9);
+  --eco-organic-border: rgba(76, 175, 80, 0.2);
+  --eco-growth-orange: #ff7043;
+
+  --eco-bg: linear-gradient(135deg, #a8e6cf 0%, #dcedc8 50%, #f8f8f8 100%);
+  --eco-card-bg: rgba(255, 255, 255, 0.95);
+  --eco-card-shadow: 0 18px 35px rgba(76, 175, 80, 0.18);
+
   /* Sidebar */
   --sidebar-width: 260px;
   --sidebar-width-collapsed: 72px;
-  --sidebar-bg: #ffffff;
-  --sidebar-text: #111827;
+  --sidebar-bg: rgba(255, 255, 255, 0.92);
+  --sidebar-text: #1f2933;
   --sidebar-text-muted: #6b7280;
-  --sidebar-hover-bg: #f3f4f6;
-  --sidebar-active-bg: #e5e7eb;
-  --sidebar-border: #e5e7eb;
+  --sidebar-hover-bg: rgba(255, 255, 255, 0.98);
+  --sidebar-active-bg: rgba(255, 255, 255, 1);
+  --sidebar-border: rgba(76, 175, 80, 0.18);
 
   /* Header */
   --header-height: 56px;
-  --header-bg: #ffffff;
-  --header-border: #e5e7eb;
+  --header-bg: rgba(255, 255, 255, 0.94);
+  --header-border: rgba(76, 175, 80, 0.16);
   --header-text: #111827;
 }
 
@@ -66,4 +80,49 @@ body {
   border: 1px solid var(--border);
   border-radius: 0.5rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.eco-card {
+  background: var(--eco-card-bg);
+  border-radius: 1.75rem;
+  border: 1px solid var(--eco-organic-border);
+  box-shadow: var(--eco-card-shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+.eco-card-border {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.eco-card-border::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  border-radius: 1.75rem 1.75rem 0 0;
+  background: linear-gradient(
+    90deg,
+    var(--eco-forest-green),
+    var(--eco-leaf-green),
+    #cddc39,
+    var(--eco-leaf-green),
+    var(--eco-forest-green)
+  );
+  background-size: 200% 100%;
+  animation: ecoBorderFlow 4s ease-in-out infinite;
+}
+
+@keyframes ecoBorderFlow {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
 }

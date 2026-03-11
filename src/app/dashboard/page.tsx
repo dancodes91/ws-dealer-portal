@@ -139,9 +139,10 @@ export default function DashboardPage() {
               </div>
 
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div className="card p-4">
+                <div className="eco-card p-4">
+                  <div className="eco-card-border" aria-hidden />
                   <div className="flex items-center justify-between mb-3">
-                    <h2 className="font-semibold text-[var(--marine-dark)]">Recent files</h2>
+                    <h2 className="font-semibold text-[var(--eco-earth-green)]">Recent files</h2>
                     <Link
                       href="/dashboard/files"
                       className="text-sm text-[var(--marine-primary)] hover:underline"
@@ -167,9 +168,10 @@ export default function DashboardPage() {
                   )}
                 </div>
 
-                <div className="card p-4">
+                <div className="eco-card p-4">
+                  <div className="eco-card-border" aria-hidden />
                   <div className="flex items-center justify-between mb-3">
-                    <h2 className="font-semibold text-[var(--marine-dark)]">Recent links</h2>
+                    <h2 className="font-semibold text-[var(--eco-earth-green)]">Recent links</h2>
                     <Link
                       href="/dashboard/links"
                       className="text-sm text-[var(--marine-primary)] hover:underline"
@@ -200,9 +202,10 @@ export default function DashboardPage() {
                   )}
                 </div>
 
-                <div className="card p-4">
+                <div className="eco-card p-4">
+                  <div className="eco-card-border" aria-hidden />
                   <div className="flex items-center justify-between mb-3">
-                    <h2 className="font-semibold text-[var(--marine-dark)]">Recent activity</h2>
+                    <h2 className="font-semibold text-[var(--eco-earth-green)]">Recent activity</h2>
                     <Link
                       href="/dashboard/reports"
                       className="text-sm text-[var(--marine-primary)] hover:underline"
@@ -234,14 +237,16 @@ export default function DashboardPage() {
         </>
       ) : (
         <>
-          <div className="card p-6 mb-6">
+          <div className="eco-card p-6 mb-6">
+            <div className="eco-card-border" aria-hidden />
             <p>
               As a dealer, you can view available price files and download links from this portal.
               Contact support if you need assistance.
             </p>
           </div>
-          <div className="card p-6">
-            <h2 className="font-semibold text-[var(--marine-dark)] mb-2">Quick links</h2>
+          <div className="eco-card p-6">
+            <div className="eco-card-border" aria-hidden />
+            <h2 className="font-semibold text-[var(--eco-earth-green)] mb-2">Quick links</h2>
             <p className="text-[var(--text-secondary)] text-sm mb-3">
               Need help? Contact your administrator or support for access to price files and
               download links.
