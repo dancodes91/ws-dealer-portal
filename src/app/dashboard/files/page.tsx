@@ -1,13 +1,22 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getFiles, getVendors, uploadFile, type PriceFileListItem, type Vendor } from "@/lib/api-client";
+import {
+  getFiles,
+  getVendors,
+  getDealers,
+  uploadFile,
+  type PriceFileListItem,
+  type Vendor,
+  type Dealer,
+} from "@/lib/api-client";
 import { PageHeading } from "@/components/PageHeading";
 import { IconFiles } from "@/components/icons";
 
 export default function FilesPage() {
   const [files, setFiles] = useState<PriceFileListItem[]>([]);
   const [vendors, setVendors] = useState<Vendor[]>([]);
+  const [dealers, setDealers] = useState<Dealer[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [uploading, setUploading] = useState(false);
@@ -17,9 +26,14 @@ export default function FilesPage() {
   async function load() {
     setLoading(true);
     try {
-      const [fList, vList] = await Promise.all([getFiles(), getVendors()]);
+      const [fList, vList, dList] = await Promise.all([
+        getFiles(),
+        getVendors(),
+        getDealers(),
+      ]);
       setFiles(fList);
       setVendors(vList);
+      setDealers(dList);
       if (vList.length && !uploadForm.vendorId) setUploadForm((u) => ({ ...u, vendorId: vList[0].id }));
       setError("");
     } catch (e) {
@@ -55,6 +69,9 @@ export default function FilesPage() {
     }
   }
 
+  const dealerById = new Map(dealers.map((d) => [d.id, d]));
+  const vendorById = new Map(vendors.map((v) => [v.id, v]));
+
   return (
     <div>
       <PageHeading icon={<IconFiles />}>Files</PageHeading>
@@ -64,7 +81,7 @@ export default function FilesPage() {
         </div>
       )}
 
-      <div className="card p-6 mb-6">
+          <div className="card p-6 mb-6">
         <h2 className="font-semibold text-[var(--marine-dark)] mb-4">Upload price file</h2>
         <form onSubmit={handleUpload} className="space-y-3 max-w-md">
           <div>
@@ -122,22 +139,30 @@ export default function FilesPage() {
             <thead className="bg-[var(--marine-light)] border-b border-[var(--border)]">
               <tr>
                 <th className="text-left p-3 font-medium">Filename</th>
-                <th className="text-left p-3 font-medium">Vendor ID</th>
-                <th className="text-left p-3 font-medium">Dealer ID</th>
+                <th className="text-left p-3 font-medium">Vendor</th>
+                <th className="text-left p-3 font-medium">Dealer</th>
                 <th className="text-left p-3 font-medium">Uploaded</th>
                 <th className="text-left p-3 font-medium">By</th>
               </tr>
             </thead>
             <tbody>
-              {files.map((f) => (
-                <tr key={f.id} className="border-b border-[var(--border)] last:border-0">
-                  <td className="p-3">{f.filename}</td>
-                  <td className="p-3">{f.vendor_id}</td>
-                  <td className="p-3">{f.dealer_id ?? "–"}</td>
-                  <td className="p-3">{new Date(f.uploaded_at).toLocaleString()}</td>
-                  <td className="p-3">{f.uploaded_by ?? "–"}</td>
-                </tr>
-              ))}
+              {files.map((f) => {
+                const vendor = vendorById.get(f.vendor_id);
+                const dealer = f.dealer_id != null ? dealerById.get(f.dealer_id) : undefined;
+                return (
+                  <tr key={f.id} className="border-b border-[var(--border)] last:border-0">
+                    <td className="p-3">{f.filename}</td>
+                    <td className="p-3">
+                      {vendor ? `${vendor.code} – ${vendor.name}` : f.vendor_id}
+                    </td>
+                    <td className="p-3">
+                      {dealer ? `${dealer.name} (${dealer.customer_number})` : "Shared"}
+                    </td>
+                    <td className="p-3">{new Date(f.uploaded_at).toLocaleString()}</td>
+                    <td className="p-3">{f.uploaded_by ?? "–"}</td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         )}

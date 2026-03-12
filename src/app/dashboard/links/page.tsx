@@ -5,10 +5,12 @@ import {
   getLinks,
   getDealers,
   getFiles,
+  getVendors,
   generateLinks,
   type Dealer,
   type DownloadLinkItem,
   type PriceFileListItem,
+  type Vendor,
 } from "@/lib/api-client";
 import { PageHeading } from "@/components/PageHeading";
 import { IconLink } from "@/components/icons";
@@ -17,6 +19,7 @@ export default function LinksPage() {
   const [links, setLinks] = useState<DownloadLinkItem[]>([]);
   const [dealers, setDealers] = useState<Dealer[]>([]);
   const [files, setFiles] = useState<PriceFileListItem[]>([]);
+  const [vendors, setVendors] = useState<Vendor[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [form, setForm] = useState({ dealerId: 0, fileIds: [] as number[] });
@@ -25,10 +28,16 @@ export default function LinksPage() {
   async function load() {
     setLoading(true);
     try {
-      const [lList, dList, fList] = await Promise.all([getLinks(), getDealers(), getFiles()]);
+      const [lList, dList, fList, vList] = await Promise.all([
+        getLinks(),
+        getDealers(),
+        getFiles(),
+        getVendors(),
+      ]);
       setLinks(lList);
       setDealers(dList);
       setFiles(fList);
+      setVendors(vList);
       if (dList.length && !form.dealerId) setForm((f) => ({ ...f, dealerId: dList[0].id }));
       setError("");
     } catch (e) {
@@ -68,6 +77,12 @@ export default function LinksPage() {
   }
 
   const dealerById = new Map(dealers.map((d) => [d.id, d]));
+  const vendorById = new Map(vendors.map((v) => [v.id, v]));
+
+  const filesWithExistingLinkForDealer = new Set(
+    links.filter((l) => l.dealer_id === form.dealerId).map((l) => l.file_id)
+  );
+  const availableFiles = files.filter((f) => !filesWithExistingLinkForDealer.has(f.id));
 
   return (
     <div>
@@ -95,17 +110,47 @@ export default function LinksPage() {
           </div>
           <div>
             <label className="block text-sm font-medium mb-2">Files (select one or more)</label>
-            <div className="flex flex-wrap gap-2 max-h-40 overflow-y-auto border border-[var(--border)] rounded p-2">
-              {files.map((f) => (
-                <label key={f.id} className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={form.fileIds.includes(f.id)}
-                    onChange={() => toggleFile(f.id)}
-                  />
-                  <span className="text-sm">{f.filename}</span>
-                </label>
-              ))}
+            <div className="max-h-56 overflow-y-auto border border-[var(--border)] rounded">
+              {availableFiles.length === 0 ? (
+                <p className="px-3 py-2 text-sm text-[var(--text-secondary)]">
+                  All files already have links for this dealer.
+                </p>
+              ) : (
+                <ul className="divide-y divide-[var(--border)]">
+                  {availableFiles.map((f) => {
+                    const vendor = vendorById.get(f.vendor_id);
+                    const dealer =
+                      f.dealer_id != null ? dealerById.get(f.dealer_id) : undefined;
+                    return (
+                      <li key={f.id} className="px-3 py-2">
+                        <label className="flex items-start gap-2 cursor-pointer">
+                          <input
+                            type="checkbox"
+                            className="mt-1"
+                            checked={form.fileIds.includes(f.id)}
+                            onChange={() => toggleFile(f.id)}
+                          />
+                          <div className="min-w-0">
+                            <div className="text-sm font-medium truncate" title={f.filename}>
+                              {f.filename}
+                            </div>
+                            <div className="text-xs text-[var(--text-secondary)]">
+                              {vendor ? `${vendor.code} – ${vendor.name}` : "Unknown vendor"}
+                              {dealer && (
+                                <>
+                                  {" · "}
+                                  Dealer {dealer.name} ({dealer.customer_number})
+                                </>
+                              )}
+                              {!dealer && " · Shared file"}
+                            </div>
+                          </div>
+                        </label>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
             </div>
           </div>
           <button type="submit" disabled={submitting || form.fileIds.length === 0} className="btn-primary">
